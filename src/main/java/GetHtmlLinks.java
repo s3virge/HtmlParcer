@@ -14,17 +14,19 @@ import java.util.Vector;
 * */
 
 public class GetHtmlLinks {
-    private static String pageUrl = "https://download.itadmins.net/Schematics/";
-    private static String fileName = "listOfFiles.txt";
+    private static String pageUrl = "";
+    private static String fileName = "";
     private static List<String> links = new Vector<>();
 
     public static void main(String[] args) {
         GetHtmlLinks htmlLinks = new GetHtmlLinks();
 
-        pageUrl = JOptionPane.showInputDialog("Enter url", pageUrl);
+        while (pageUrl.isEmpty()){
+            pageUrl = JOptionPane.showInputDialog("Enter url", "https://download.itadmins.net/Schematics/");
 
-        if (pageUrl == null)
-            return;
+            if (pageUrl == null)
+                return;
+        }
 
         htmlLinks.getLinks();
         htmlLinks.printLinks();
@@ -66,10 +68,13 @@ public class GetHtmlLinks {
     }
 
     private void writeFile() {
-        fileName = JOptionPane.showInputDialog("Enter file name.");
-
         while (fileName.isEmpty()){
             fileName = JOptionPane.showInputDialog("Enter file name.", "linkList.txt");
+
+            //cansel button was pressed
+            if (fileName == null) {
+                return;
+            }
         }
 
         try {
