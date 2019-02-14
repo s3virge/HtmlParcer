@@ -26,12 +26,12 @@ public class GetHtmlLinks {
         if (pageUrl == null)
             return;
 
-        htmlLinks.getFileLinks();
+        htmlLinks.getLinks();
         htmlLinks.printLinks();
         htmlLinks.writeFile();
     }
 
-    private void getFileLinks() {
+    private void getLinks() {
 
         try {
             Document doc = Jsoup.connect(pageUrl).get();
