@@ -19,6 +19,7 @@ public class GetHtmlLinks {
     private static List<String> links = new Vector<>();
 
     public static void main(String[] args) {
+
         GetHtmlLinks htmlLinks = new GetHtmlLinks();
 
         while (pageUrl.isEmpty()){
@@ -68,6 +69,7 @@ public class GetHtmlLinks {
     }
 
     private void writeFile() {
+
         while (fileName.isEmpty()){
             fileName = JOptionPane.showInputDialog("Enter file name.", "linkList.txt");
 
