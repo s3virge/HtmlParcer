@@ -11,7 +11,23 @@ import java.util.Vector;
 
 /*
 * wget -i s-manuals.txt -P foldername
-* */
+*
+* https://ru.stackoverflow.com/questions/465935/Как-обойти-все-файлы-в-папке-и-подпапках-и-прочитать-текстовые-файлы-в-массив
+* public void processFilesFromFolder(File folder)
+{
+    File[] folderEntries = folder.listFiles();
+    for (File entry : folderEntries)
+    {
+        if (entry.isDirectory())
+        {
+            processFilesFromFolder(entry);
+            continue;
+        }
+        // иначе вам попался файл, обрабатывайте его!
+    }
+}
+*  */
+
 
 public class GetHtmlLinks {
     private static String pageUrl = "";
@@ -73,7 +89,7 @@ public class GetHtmlLinks {
         while (fileName.isEmpty()){
             fileName = JOptionPane.showInputDialog("Enter file name.", "linkList.txt");
 
-            //cansel button was pressed
+            //cancel button was pressed
             if (fileName == null) {
                 return;
             }
