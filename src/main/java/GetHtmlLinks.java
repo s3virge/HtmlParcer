@@ -68,6 +68,10 @@ public class GetHtmlLinks {
     private void writeFile() {
         fileName = JOptionPane.showInputDialog("Enter file name.");
 
+        while (fileName.isEmpty()){
+            fileName = JOptionPane.showInputDialog("Enter file name.", "linkList.txt");
+        }
+
         try {
             FileWriter file = new FileWriter(fileName);
 
