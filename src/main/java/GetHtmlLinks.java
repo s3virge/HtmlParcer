@@ -9,8 +9,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
+/*
+* wget -i s-manuals.txt -P foldername
+* */
+
 public class GetHtmlLinks {
     private static String pageUrl = "https://download.itadmins.net/Schematics/";
+    private static String fileName = "listOfFiles.txt";
     private static List<String> links = new Vector<>();
 
     public static void main(String[] args) {
@@ -21,15 +26,15 @@ public class GetHtmlLinks {
         if (pageUrl == null)
             return;
 
-        htmlLinks.getFileLinks(pageUrl);
+        htmlLinks.getFileLinks();
         htmlLinks.printLinks();
-        htmlLinks.writeFile("listOfFiles" + ".txt");
+        htmlLinks.writeFile();
     }
 
-    private void getFileLinks(String strUrl) {
+    private void getFileLinks() {
 
         try {
-            Document doc = Jsoup.connect(strUrl).get();
+            Document doc = Jsoup.connect(pageUrl).get();
             Elements elements = doc.select("a[href]");
 
             addLinksToList(elements);
@@ -60,7 +65,9 @@ public class GetHtmlLinks {
         }
     }
 
-    private void writeFile(String fileName) {
+    private void writeFile() {
+        fileName = JOptionPane.showInputDialog("Enter file name.");
+
         try {
             FileWriter file = new FileWriter(fileName);
 
