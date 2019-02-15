@@ -12,20 +12,7 @@ import java.util.Vector;
 /*
 * wget -i s-manuals.txt -P foldername
 *
-* https://ru.stackoverflow.com/questions/465935/Как-обойти-все-файлы-в-папке-и-подпапках-и-прочитать-текстовые-файлы-в-массив
-* public void processFilesFromFolder(File folder)
-{
-    File[] folderEntries = folder.listFiles();
-    for (File entry : folderEntries)
-    {
-        if (entry.isDirectory())
-        {
-            processFilesFromFolder(entry);
-            continue;
-        }
-        // иначе вам попался файл, обрабатывайте его!
-    }
-}
+
 *  */
 
 
@@ -45,6 +32,7 @@ public class GetHtmlLinks {
                 return;
         }
 
+//        htmlLinks.processFiles(pageUrl);
         htmlLinks.getLinks();
         htmlLinks.printLinks();
         htmlLinks.writeFile();
@@ -110,5 +98,48 @@ public class GetHtmlLinks {
             System.out.println("An error occurred while writing the file " + fileName);
             System.out.println(ex);
         }
+    }
+
+    //https://ru.stackoverflow.com/questions/465935/Как-обойти-все-файлы-в-папке-и-подпапках-и-прочитать-текстовые-файлы-в-массив
+    public void processFiles(String pageUrl)
+    {
+        Vector<String> listOfLinks = takeLinks();
+
+        for (String entry : listOfLinks)
+        {
+            if (!isFile(entry))
+            {
+                processFiles(entry);
+                continue;
+            }
+            // иначе вам попался файл, обрабатывайте его!
+            System.out.println(entry);
+        }
+    }
+
+    private Vector<String> takeLinks() {
+        Vector<String> linkList = new Vector<>();
+
+        try {
+            Document doc = Jsoup.connect(pageUrl).get();
+            Elements elements = doc.select("a[href]");
+
+            for (Element link : elements) {
+                String strAttr = link.attr("href");
+                linkList.add(strAttr);
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return linkList;
+    }
+
+    private boolean isFile(String path) {
+//        boolean result = true;
+        //".pdf";
+        return path.matches(".pdf");
+//        return result;
     }
 }
