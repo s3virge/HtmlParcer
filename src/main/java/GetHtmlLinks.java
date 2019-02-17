@@ -32,10 +32,10 @@ public class GetHtmlLinks {
                 return;
         }
 
-//        htmlLinks.processFiles(pageUrl);
-        htmlLinks.getLinks();
-        htmlLinks.printLinks();
-        htmlLinks.writeFile();
+        htmlLinks.processFiles(pageUrl);
+//        htmlLinks.getLinks();
+//        htmlLinks.printLinks();
+//        htmlLinks.writeFile();
     }
 
     private void getLinks() {
@@ -103,10 +103,17 @@ public class GetHtmlLinks {
     //https://ru.stackoverflow.com/questions/465935/Как-обойти-все-файлы-в-папке-и-подпапках-и-прочитать-текстовые-файлы-в-массив
     public void processFiles(String pageUrl)
     {
-        Vector<String> listOfLinks = takeLinks();
+        Vector<String> listOfLinks = takeLinks(pageUrl);
 
         for (String entry : listOfLinks)
         {
+//            https://stackoverflow.com/questions/8923398/regex-doesnt-work-in-string-matches
+            boolean res = entry.matches("[?=]");
+
+            if (res) {
+                continue;
+            }
+
             if (!isFile(entry))
             {
                 processFiles(entry);
@@ -117,11 +124,11 @@ public class GetHtmlLinks {
         }
     }
 
-    private Vector<String> takeLinks() {
+    private Vector<String> takeLinks(String fileUrl) {
         Vector<String> linkList = new Vector<>();
 
         try {
-            Document doc = Jsoup.connect(pageUrl).get();
+            Document doc = Jsoup.connect(fileUrl).get();
             Elements elements = doc.select("a[href]");
 
             for (Element link : elements) {
