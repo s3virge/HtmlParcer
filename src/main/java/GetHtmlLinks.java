@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*
 * wget -i s-manuals.txt -P foldername
@@ -107,10 +109,16 @@ public class GetHtmlLinks {
 
         for (String entry : listOfLinks)
         {
-//            https://stackoverflow.com/questions/8923398/regex-doesnt-work-in-string-matches
-            boolean res = entry.matches("[?=]");
 
-            if (res) {
+            if (checkMatch(entry, "(\\?.=.;)")) {
+                continue;
+            }
+
+            if (checkMatch(entry, "(//$)")) {
+                continue;
+            }
+
+            if (checkMatch(entry, "(//\\w+/)")) {
                 continue;
             }
 
@@ -124,6 +132,13 @@ public class GetHtmlLinks {
         }
     }
 
+    private boolean checkMatch(String str, String regex) {
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(str);
+
+        return m.find();
+    }
+
     private Vector<String> takeLinks(String fileUrl) {
         Vector<String> linkList = new Vector<>();
 
@@ -133,7 +148,7 @@ public class GetHtmlLinks {
 
             for (Element link : elements) {
                 String strAttr = link.attr("href");
-                linkList.add(strAttr);
+                linkList.add(fileUrl + strAttr);
             }
         }
         catch (IOException e) {
@@ -144,9 +159,8 @@ public class GetHtmlLinks {
     }
 
     private boolean isFile(String path) {
-//        boolean result = true;
-        //".pdf";
-        return path.matches(".pdf");
-//        return result;
+        Pattern p = Pattern.compile("\\w+\\.[a-z]{3}$");
+        Matcher m = p.matcher(path);
+        return m.find();
     }
 }
