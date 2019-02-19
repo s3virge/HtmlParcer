@@ -1,4 +1,5 @@
 import org.jsoup.Jsoup;
+import org.jsoup.UnsupportedMimeTypeException;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -6,6 +7,9 @@ import org.jsoup.select.Elements;
 import javax.swing.*;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -20,7 +24,9 @@ import java.util.regex.Pattern;
 
 public class GetHtmlLinks {
     private static String pageUrl = "";
-    private static String fileName = "";
+    private static String filePath = "~/";
+
+    private static String fileName = "/home/s3virge/fileList.txt";
     private static List<String> links = new Vector<>();
 
     public static void main(String[] args) {
@@ -34,10 +40,22 @@ public class GetHtmlLinks {
                 return;
         }
 
+        htmlLinks.createFile();
+
         htmlLinks.processFiles(pageUrl);
 //        htmlLinks.getLinks();
 //        htmlLinks.printLinks();
 //        htmlLinks.writeFile();
+    }
+
+    private void createFile() {
+        try {
+            FileWriter file = new FileWriter(fileName);
+            file.close();
+        }
+        catch (IOException ioex) {
+            ioex.getMessage();
+        }
     }
 
     private void getLinks() {
@@ -129,6 +147,14 @@ public class GetHtmlLinks {
             }
             // иначе вам попался файл, обрабатывайте его!
             System.out.println(entry);
+
+            try {
+                entry += "\n";
+                Files.write(Paths.get(fileName), entry.getBytes(), StandardOpenOption.APPEND);
+            }
+            catch (IOException iex) {
+                iex.getMessage();
+            }
         }
     }
 
@@ -151,8 +177,11 @@ public class GetHtmlLinks {
                 linkList.add(fileUrl + strAttr);
             }
         }
-        catch (IOException e) {
+        catch (UnsupportedMimeTypeException e) {
             e.printStackTrace();
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
         }
 
         return linkList;
